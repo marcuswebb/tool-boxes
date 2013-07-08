@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+#tools 
+	{
+		position: absolute;
+		width: 400px;
+		right: 0;
+	}
+.tools-ui,
+#tools .closer 
+	{
+		z-index: 2;
+		display: block;
+		position: relative;
+	}
+.tools-ui
+	{
+		background-color: gray;
+	}
+#tool-box
+	{
+		z-index: 1;
+		position: fixed;
+		overflow: hidden;
+		width: 0;
+		min-height: 100%;
+		right: 0;
+		top: 0;
+		margin-top: 100px;
+	}
+#tool-box.audio 
+	{
+		min-height: 100px;
+	}
+#tool-box.open 
+	{
+		width: 400px;
+	}
+#tool-box .cn 
+	{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-color: lime;
+	}
+#tool-box .inner 
+	{
+		min-width: 400px;
+		width: 100%;
+	}
+#tool-box .inner p 
+	{
+		line-height: 20px;
+	}
+.tool-box,
+.tool-box .cn,
+.transition
+	{
+		-webkit-transition: 0.6s ease-in-out;
+		-moz-transition: 0.6s ease-in-out;
+		-o-transition: 0.6s ease-in-out;
+		-ms-transition: 0.6s ease-in-out;
+		transition: 0.6s ease-in-out;
+	}
+
+	</style>
+</head>
+<body>
+	<div id="tools">
+		<div class="closer">
+			X
+		</div>
+		<ul class="tools-ui">
+			<li data-tool-type="tool-soundcloud">
+				<a>SoundCloud</a>
+			</li>
+			<li data-tool-type="tool-twitter">
+				<a>Twitter</a>
+			</li>
+			<li data-tool-type="tool-newsletter">
+				<a>Newsletter</a>
+			</li>
+		</ul>
+		<div id="tool-box" class="tool-box">
+			<div class="cn">
+				<div class="inner">
+					Unloaded
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+	<script>
+$(document).ready(function() {
+	$('#tool-box .inner').css({
+		'opacity':0
+	});
+	$('#tools .closer').on('click', function(event) {
+		var toolBox = $('#tool-box');
+		toolBox.removeClass('open');
+	});
+	$('.tools-ui li').each(function() {
+
+		var thisId = $(this).prevAll().length;
+
+		$(this)
+		.on('click', 'a', function(event) {
+
+			var toolTip = $(this).parent('li').attr('data-tool-type');
+			toolTip = cutString(1,toolTip);
+			
+			var toolBox = $('#tool-box');
+			var toolInner = toolBox.find('.inner');
+			toolInner.html('');
+
+			// if (toolInner.css('opacity') > 0) {
+			// 	toolInner
+			// 	.addClass('transition')
+			// 	.css({
+			// 		'opacity':0,
+			// 	}, 800);
+			// }
+
+			if (toolTip === 'soundcloud') {
+				toolBox.addClass('audio');
+				toolInner = $('#tool-box-audio');
+			} else {
+				toolBox.removeClass('audio');
+			}
+
+			toolBox
+			.removeClass('open')
+			.addClass('open');
+
+			toolInner
+			.removeClass('transition')
+			.css({
+				'opacity':0
+			})
+			.html('<p>' + toolTip + '</p>');
+
+			setTimeout(function() {
+				toolInner
+				.addClass('transition')
+				.css({
+					'opacity':1
+				});
+			}, 900);
+		});
+	});
+});
+
+function cutString(x,str) {
+	var s = new Array();
+	var s = str.split('-');
+	return s[x];
+}
+
+
+	</script>
+</body>
+</html>
